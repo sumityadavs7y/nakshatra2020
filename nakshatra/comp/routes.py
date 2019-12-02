@@ -1,10 +1,11 @@
-from flask import Blueprint, request, render_template, flash, redirect, url_for
+from flask import Blueprint, request, render_template, flash, redirect, url_for, abort
 from flask_login import login_required, current_user
 from datetime import datetime, timedelta
 
-from nakshatra.models import User
+from nakshatra.models import (User, Question, Score, Competition, 
+                            Treasurequestion, Treasurehint, 
+                            Treasuresubmission, Idequestion, Idesubmission)
 from nakshatra import db
-from nakshatra.models import Question, Score, Competition
 
 comp = Blueprint('comp', __name__)
 
@@ -54,8 +55,31 @@ def mcq():
             return redirect(url_for('main.home'))
     return render_template('comp/mcq.html',title='MCQ', questions=questions, remaining_minute=remaining_minute, remaining_second=remaining_second)
 
-@comp.route('/treasure',defaults={'question_id': 1})
-@comp.route('/treasure/<int:question_id>')
+@comp.route('/treasure',defaults={'question_id': 1}, methods=['GET','POST'])
+@comp.route('/treasure/<int:question_id>', methods=['GET','POST'])
 @login_required
 def treasure(question_id):
-    return render_template('comp/treasure.html', title='Treasure')
+    if request.method =='POST':
+        print('wanna submit '+str(question_id))
+        print(request.form.get('answer'))
+        submission = Treasuresubmission(question_id=question_id,user_id=current_user.id,submitted_answer=request.form.get('answer'))
+        db.session.add(submission)
+        db.session.commit()
+        return redirect(url_for('comp.treasure',question_id=question_id+1))
+    total_questions = Treasurequestion.query.count()
+    if question_id>total_questions:
+        flash('All question submitted or link manipulation done','info')
+        return redirect(url_for('main.home'))
+    treasure_submission = Treasuresubmission.query.filter_by(user_id=current_user.id,question_id=question_id).first()
+    if treasure_submission:
+        return redirect(url_for('comp.treasure',question_id=question_id+1))
+    current_question = Treasurequestion.query.filter_by(id=question_id).first()
+    return render_template('comp/treasure.html', question=current_question, title='Treasure')
+
+@comp.route('/ide',defaults={'question_id': 1}, methods=['GET','POST'])
+@comp.route('/ide/<int:question_id>', methods=['GET','POST'])
+def ide(question_id):
+    if request.method=='POST':
+        print(request.form.get('editor'))
+    question = Idequestion.query.filter_by(id=question_id).first()
+    return render_template('comp/ide.html', question=question, title="IDE")

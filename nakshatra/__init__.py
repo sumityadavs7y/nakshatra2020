@@ -21,7 +21,9 @@ def create_app(config_class=Config):
     app.config.from_object(Config)
 
     from nakshatra.admin.views import AdminView, FileAdminExt
-    from nakshatra.models import User, Question, Score, Competition
+    from nakshatra.models import (User, Question, Score, Competition,
+                                    Treasurehint, Treasurequestion, Treasuresubmission,
+                                    Idequestion, Idesubmission)
 
     admin = Admin(app, name='Dashboard', index_view=AdminView(User, db.session, url='/admin', endpoint='admin'))
     path = op.join(op.dirname(__file__), 'static')
@@ -29,6 +31,11 @@ def create_app(config_class=Config):
     admin.add_view(AdminView(Question, db.session))
     admin.add_view(AdminView(Competition, db.session))
     admin.add_view(AdminView(Score, db.session))
+    admin.add_view(AdminView(Treasurehint, db.session))
+    admin.add_view(AdminView(Treasurequestion, db.session))
+    admin.add_view(AdminView(Treasuresubmission, db.session))
+    admin.add_view(AdminView(Idequestion, db.session))
+    admin.add_view(AdminView(Idesubmission, db.session))
     
     db.init_app(app)
     bcrypt.init_app(app)

@@ -1,0 +1,54 @@
+{% extends "comp/layout.html" %}
+{% block content %}
+<div class="container-fluid">
+    <form action="{{ url_for('comp.treasure',question_id=question.id)}}" method="POST">
+    <div class="row shadow">
+        <div class="col-md-12 p-3 border">
+            {{question.id}}. {{question.question}}
+            <br><br>
+            <img src="{{ url_for('static',filename='treasure_images/'+question.image) }}">
+            <br><br>
+            Hints:
+            <ul>
+            {% for hint in question.hints %}
+                <li>{{hint.hint}}</li>
+            {% endfor %}
+            </ul>
+            <br>
+            <div class="form-group">
+                <label for="answer">Your answer:</label>
+                <input type="text" name="answer" id="answer" placeholder="Enter your answer here..." class="form-control">
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center mt-4">
+        <button type="button" class="btn btn-success shadow-lg mb-3" data-toggle="modal" data-target="#confirmSubmit">Submit</button>
+    </div>
+    <div class="modal" id="confirmSubmit">
+            <div class="modal-dialog">
+                <div class="modal-content">
+              
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Are you Confirm?</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                      Press 'Yes' for Submit<br>
+                      Press 'No' for Cancel
+                    </div>
+                    
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-success" name="submitBtn" id="subBtn" value="Yes">
+                        <!-- <button type="button" class="btn btn-success" data-dismiss="modal">Yes</button> -->
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                    </div>
+              </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock content %}

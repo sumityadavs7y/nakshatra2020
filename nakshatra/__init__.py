@@ -4,11 +4,11 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
-# from dotenv import load_dotenv
+from dotenv import load_dotenv
 import os.path as op
 
-# load_dotenv(".env",verbose=True)
-# from nakshatra.config import Config
+load_dotenv(".env",verbose=True)
+from nakshatra.config import Config
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()

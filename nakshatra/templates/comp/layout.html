@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon.png') }}" type="image/png" sizes="16x16">
+
+    <!-- Bootstrap CSS File -->
+    <link href="{{ url_for('static', filename='bootstrap/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='bootstrap/costum.css') }}" rel="stylesheet">
+    
+    <!-- Bootstrap JS File -->
+    <script src="{{ url_for('static', filename='bootstrap/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap/popper.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap/bootstrap.min.js') }}"></script>
+    {% if title %}
+        <title>{{title}} - Nakshatra'20</title>
+    {% else %}
+        <title>Nakshatra'20</title>
+    {% endif %}
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+        <div class="container">
+                {% if title %}
+                    <a class="navbar-brand mx-auto" href="#">{{ title }} - Nakshatra'20</a>
+                {% else %}
+                    <a class="navbar-brand mx-auto" href="#">Nakshatra'20</a>
+                {% endif %}
+        </div>
+    </nav>
+    <!-- NAVBAR ENDS -->
+    
+    <main class="p-3">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

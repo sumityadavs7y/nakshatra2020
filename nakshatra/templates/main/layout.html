@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon.png') }}" type="image/png" sizes="16x16">
+
+    <!-- Bootstrap CSS File -->
+    <link href="{{ url_for('static', filename='bootstrap/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='bootstrap/costum.css') }}" rel="stylesheet">
+    
+    <!-- Bootstrap JS File -->
+    <script src="{{ url_for('static', filename='bootstrap/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap/popper.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap/bootstrap.min.js') }}"></script>
+    {% if title %}
+        <title>{{title}} - Nakshatra'20</title>
+    {% else %}
+        <title>Nakshatra'20</title>
+    {% endif %}
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+        <div class="container">
+            <ul class="navbar-nav">
+                <a class="navbar-brand" href="{{ url_for('main.home')}}">Nakshatra</a>
+                <li class="nav-item">
+                    <a class="nav-link {% if active_page==0 %} active{% endif %}" href="{{ url_for('main.home')}}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if active_page==1 %} active{% endif %}" href="{{ url_for('main.events')}}">Events</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if active_page==2 %} active{% endif %}" href="{{ url_for('main.teams')}}">Teams</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if active_page==3 %} active{% endif %}" href="{{ url_for('main.gallery')}}">Gallery</a>
+                </li>
+                {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('users.logout')}}">Logout</a>
+                    </li>
+                    {% if current_user.user_type=="admin" %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin.index_view')}}">Admin</a>
+                        </li>
+                    {% endif %}
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link {% if active_page==4 %} active{% endif %}" href="{{ url_for('users.register')}}">Register</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if active_page==5 %} active{% endif %}" href="{{ url_for('users.login')}}">Login</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    <!-- NAVBAR ENDS -->
+    
+    <main class="container p-3">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-dark text-light fixed-bottom p-5">
+        <div class="container">
+                &copy; copyright to Sumit Yadav
+        </div>
+    </footer>
+</body>
+</html>

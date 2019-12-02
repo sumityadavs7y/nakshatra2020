@@ -1,0 +1,26 @@
+{% extends "main/layout.html" %}
+{% set active_page = 5 %}
+{% block content %}
+<form action="" method="POST">
+    <h2>Login</h2>
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.email(class="form-control") }}
+            <div class="small text-danger">
+                {% for error in form.email.errors %}
+                    <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ form.password(class="form-control") }}
+            <div class="small text-danger">
+                {% for error in form.password.errors %}
+                    <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <span>{{ form.remember() }} Remember me</span><br>
+        {{ form.submit(class="btn btn-primary") }}
+    </form>
+{% endblock content %}

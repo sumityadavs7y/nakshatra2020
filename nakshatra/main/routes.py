@@ -19,6 +19,10 @@ def gallery():
 def teams():
     return render_template('main/teams.html', title='About')
 
+@main.route("/events")
+def events():
+    return render_template('main/events.html', title='About')
+
 @main.route("/about")
 def about():
     return render_template('main/about.html', title='About')

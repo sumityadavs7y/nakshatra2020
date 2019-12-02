@@ -16,7 +16,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(120), nullable=False)
     user_type = db.Column(db.String(20), nullable=False, default='participant')
 
-    submissions = db.relationship('Submitted_answer', backref='submitted_by', lazy=True)
+    scores = db.relationship('Score', backref='submitted_by', lazy=True)
 
     def __repr__(self):
         return f'User({self.college}, {self.user_type})'
@@ -43,11 +43,17 @@ class Question(db.Model):
     optiond = db.Column(db.String(120), nullable=False)
     answer = db.Column(db.String(10), nullable=False)
 
-    submissions = db.relationship('Submitted_answer', backref='question', lazy=True)
-
-class Submitted_answer(db.Model):
+class Score(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    submit_option = db.Column(db.String(10), nullable=False)
-
+    start_time = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    score = db.Column(db.Float)
+    is_submitted = db.Column(db.Boolean, default=False, nullable=False)
+    comp_id = db.Column(db.Integer, db.ForeignKey('competition.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    question_id = db.Column(db.Integer, db.ForeignKey('question.id'), nullable=False)
+
+class Competition(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    comp_name = db.Column(db.String(120), nullable=False, unique=True)
+    duration = db.Column(db.Integer, nullable=False)
+
+    scores = db.relationship('Score', backref='submissions', lazy=True)
